@@ -35,7 +35,14 @@ function offererPeer(stream){
 		video.src = URL.createObjectURL(event.stream);
 		document.body.appendChild(video);
 		video.controls = true;
-		video.play();
+		var p = video.play();
+		if (p !== undefined){
+			p.then(function(){
+				console.log("playing");
+			}).catch(function (e){
+				console.log(e);
+			});
+		}
 	};
 	
 	rtc_connection.receiveInfo = function (info) {
