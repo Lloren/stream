@@ -1,0 +1,58 @@
+@font-face {
+	font-family: 'Source Sans Pro';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(../fonts/SourceSansPro.woff2) format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+* {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; -webkit-user-select:none;}
+html {text-size-adjust:100%; -webkit-text-size-adjust:100%;}
+body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0;}
+
+.clear {clear:both;}
+
+input, select {-webkit-appearance:none; border-radius:0;}
+
+
+#modal-overlay {position:absolute; pointer-events:none; opacity:0; background-color:#222; width:100%; height:100%; -webkit-transition: opacity 200ms ease-out, background-color 200ms ease-out; -webkit-transform: translate3d(0, 0, 0); -webkit-backface-visibility: hidden; -webkit-perspective: 1000; z-index:999;}
+#modal-overlay.enabled {pointer-events:auto; opacity:0.7;}
+
+#modal {display:none; position:absolute; z-index:1000; margin:auto; width:250px; height:175px; text-align:center; top:0; right:0; bottom:0; left:0; background-color:#FFF;}
+#modal .fa {position:absolute; right:5px; bottom:0; z-index:-1; font-size:9em; color:#ECECEC;}
+#modal h1 {margin:10px 0 0 0; padding:0; text-align:center; font-size:20px; font-weight:normal; color:#3592dd;}
+#modal > div {margin:10px;}
+#modal > a {position:absolute; bottom:0; color:#FFF; width:50%; height:50px; line-height:50px; text-align:center; background-color:#3592dd; left:0;}
+#modal > a.fullwidth {width:100%;}
+#modal > a:last-child {background-color:#DB2E2E; left:initial; right:0;}
+#modal input[type="text"] {border:none; background-color:#EFEFEF; width:100%; padding:10px; font-size:18px; opacity:0.8; border:1px solid #DDD;}
+#modal #mbutton1:active, #modal #mbutton2:active {opacity:0.9;}
+
+#modal.loading {width:175px; height:50px; line-height:50px;}
+#modal.loading .fa {font-size:initial; position:static; color:#999;}
+#modal.loading h1 {margin:0;}
+#modal.loading p, #modal.loading a {display:none !important;}
+
+
+#nav-overlay {position:absolute; pointer-events:none; opacity:0; background-color:#222; width:100%; height:100%; -webkit-transition: opacity 200ms ease-out, background-color 200ms ease-out; -webkit-transform: translate3d(0, 0, 0); -webkit-backface-visibility: hidden; -webkit-perspective: 1000; z-index:99;}
+#nav-overlay.enabled {pointer-events:auto; opacity:0.7;}
+
+#navbutton {position:absolute; top:0; right:0; z-index:100; width:50px; height:50px; line-height:50px; text-align:center; color:#FFF;}
+
+#nav {position:fixed; z-index:100; top:0; right:0; width:275px; background-color:#EFEFEF; overflow:auto; -webkit-transition: opacity 200ms ease-out; -webkit-backface-visibility: hidden; -webkit-perspective: 1000; opacity:0; pointer-events:none;}
+#nav.open {opacity:1; pointer-events:all;}
+#nav ul {list-style:none; margin:0; padding:0;}
+#nav ul li {line-height:45px; font-size:18px; border-bottom:solid 1px #E7E7E7;}
+#nav ul li:first-child {color:#444; text-align:center; line-height:35px;}
+#nav ul li a {color:#444; background-color:#FFF; text-decoration:none; padding:0 15px; display:block;}
+
+/* iOS only */
+
+/* Android only */
+
+/* Windows only */
+/*body#win*/
+
+/* Non-phonegap builds only */
+
+/* Smaller/Mobile devices Landscape (iPhone <= 6+ etc.) */
