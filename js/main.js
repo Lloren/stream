@@ -69,7 +69,9 @@ function offererPeer(stream){
 					console.log("createAnswer err", err);
 				});
 			}
-			ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "ice", d: rtc_connection.candidites})}));
+			setTimeout(function (){
+				ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "ice", d: rtc_connection.candidites})}));
+			}, 1000);
 		} else if (info.candidate){
 			rtc_connection.addIceCandidate(new RTCIceCandidate(info));
 		} else {
