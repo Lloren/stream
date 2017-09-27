@@ -3,7 +3,7 @@
 				xmlns:android	= "http://schemas.android.com/apk/res/android"
 				id				= "notomono.stream"
 				version			= "1.0.0">
-	<name></name>
+	<name>Stream test</name>
 	<description>
 	</description>
 	<author email="support@2dio.com" href="http://2dio.com">
