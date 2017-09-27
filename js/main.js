@@ -14,6 +14,9 @@ window.iceServers = {
 	}]
 };
 
+var video;
+var p;
+
 /* offerer */
 function offererPeer(stream){
 	// stream is only attached by offerer
@@ -31,11 +34,12 @@ function offererPeer(stream){
 	rtc_connection.onaddstream = function (event) {
 		console.log('remote stream', event.stream);
 		
-		var video = document.createElement('video');
+		video = document.createElement('video');
 		video.src = URL.createObjectURL(event.stream);
 		document.body.appendChild(video);
 		video.controls = true;
-		var p = video.play();
+		p = video.play();
+		console.log(p);
 		if (p !== undefined){
 			p.then(function(){
 				console.log("playing");
