@@ -63,6 +63,8 @@
 	<gap:plugin name="cordova-plugin-network-information" source="npm" />
 	<gap:plugin name="cordova-plugin-appversion" source="npm" />
 
+	<gap:plugin name="phonegap-plugin-media-stream" source="npm" />
+
 	<feature name="http://api.phonegap.com/1.0/network" />
 
 	<feature name="StatusBar">
