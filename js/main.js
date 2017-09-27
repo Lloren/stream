@@ -59,17 +59,17 @@ function offererPeer(stream){
 				console.log("setRemoteDescription");
 			});
 			
-			//if (info.type == "offer"){
-			rtc_connection.createAnswer(function (answer) {
-				console.log('answer sdp', answer.sdp);
-				ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "answer", d: answer})}));
-				//document.getElementById("offer").value = JSON.stringify(answer);
-				rtc_connection.setLocalDescription(answer);
-			}, function (err){
-				console.log("createAnswer err", err);
-			});
+			if (info.type == "offer"){
+				rtc_connection.createAnswer(function (answer) {
+					console.log('answer sdp', answer.sdp);
+					ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "answer", d: answer})}));
+					//document.getElementById("offer").value = JSON.stringify(answer);
+					rtc_connection.setLocalDescription(answer);
+				}, function (err){
+					console.log("createAnswer err", err);
+				});
+			}
 			ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "ice", d: rtc_connection.candidites})}));
-			//}
 		} else if (info.candidate){
 			rtc_connection.addIceCandidate(new RTCIceCandidate(info));
 		} else {
