@@ -16,6 +16,7 @@ window.iceServers = {
 
 var video;
 var p;
+var ice_sent = false;
 
 /* offerer */
 function offererPeer(stream){
@@ -28,6 +29,8 @@ function offererPeer(stream){
 		if (!event || !event.candidate) return;
 		rtc_connection.candidites.push(event.candidate);
 		console.log(event);
+		if (ice_sent)
+			ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "ice1", d: event})}));
 		//answerer.addIceCandidate(event.candidate);
 	};
 	
@@ -71,6 +74,7 @@ function offererPeer(stream){
 			}
 			setTimeout(function (){
 				ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "ice", d: rtc_connection.candidites})}));
+				ice_sent = true;
 			}, 1000);
 		} else if (info.candidate){
 			rtc_connection.addIceCandidate(new RTCIceCandidate(info));
@@ -170,6 +174,8 @@ function startup(){
 							} else if (dat.t == "answer"){
 								rtc_connection.receiveInfo(dat.d);
 							} else if (dat.t == "ice"){
+								rtc_connection.receiveInfo(dat.d);
+							} else if (dat.t == "ice1"){
 								rtc_connection.receiveInfo(dat.d);
 							}
 						}
