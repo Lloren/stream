@@ -27,7 +27,7 @@ function offererPeer(stream){
 	rtc_connection.onicecandidate = function (event){
 		if (!event || !event.candidate) return;
 		rtc_connection.candidites.push(event.candidate);
-		//console.log(event);
+		console.log(event);
 		//answerer.addIceCandidate(event.candidate);
 	};
 	
