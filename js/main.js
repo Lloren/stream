@@ -18,30 +18,59 @@ window.iceServers = {
 	},{
 		url: 'stun:stunserver.org'
 	},{
-		url: 'turn:numb.viagenie.ca',
-		credential: 'muazkh',
-		username: 'webrtc@live.com'
-	},{
-		url: 'turn:192.158.29.39:3478?transport=udp',
-		credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-		username: '28224511:1379330808'
-	},{
-		url: 'turn:192.158.29.39:3478?transport=tcp',
-		credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-		username: '28224511:1379330808'
+		url: 'turn:notomono.onnix.net:3333',
+		credential: 'loren',
+		username: 'loren'
 	}]
 };
 
+var streamRecorder;
+var stream;
 var video_you;
 var video;
 var p;
+var playing_vid = false;
 var p_you;
 var ice_sent = false;
+var chunks = [];
+var ms;
+var sourceBuffer;
+var buff_queue = [];
+var sb = false;
+var c = 0;
+var mime = 'video/webm;codecs=vp9';
+
+function b64toBarray(b64Data) {
+	var byteCharacters = atob(b64Data);
+	var byteNumbers = new Array(byteCharacters.length);
+	for (var i = 0; i < byteCharacters.length; i++) {
+		byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	var byteArray = new Uint8Array(byteNumbers);
+	return byteArray;
+}
 
 /* offerer */
-function offererPeer(stream){
+function send_record(){
+	streamRecorder.ondataavailable = function (e){
+		var reader = new window.FileReader();
+		reader.readAsDataURL(e.data);
+		reader.onloadend = function() {
+			ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "vid_blob", c: c++, d: reader.result})}));
+		};
+	};
+	streamRecorder.start(100);
+	setInterval(function (){
+		//streamRecorder.requestData();
+		//streamRecorder.stop();
+	}, 1000);
+}
+
+function offererPeer(s){
+	stream = s;
+	streamRecorder = new MediaRecorder(stream, {mimeType: mime});
 	video_you = document.createElement('video');
-	video_you.src = URL.createObjectURL(stream);
+	video_you.src = URL.createObjectURL(s);
 	document.body.appendChild(video_you);
 	video_you.muted = "muted";
 	video_you.width = 200;
@@ -55,7 +84,7 @@ function offererPeer(stream){
 		});
 	}
 	// stream is only attached by offerer
-	rtc_connection.addStream(stream);
+	rtc_connection.addStream(s);
 	
 	rtc_connection.candidites = [];
 	
@@ -79,6 +108,7 @@ function offererPeer(stream){
 		console.log(p);
 		if (p !== undefined){
 			p.then(function(){
+				playing_vid = true;
 				console.log("playing");
 			}).catch(function (e){
 				console.log(e);
@@ -110,6 +140,11 @@ function offererPeer(stream){
 				ws.send(JSON.stringify({"type":"message", user_id: to, m: JSON.stringify({t: "ice", d: rtc_connection.candidites})}));
 				ice_sent = true;
 			}, 1000);
+			setTimeout(function (){
+				if (!playing_vid){
+					//send_record();
+				}
+			}, 3000);
 		} else if (info.candidate){
 			rtc_connection.addIceCandidate(new RTCIceCandidate(info));
 		} else {
@@ -211,6 +246,45 @@ function startup(){
 								rtc_connection.receiveInfo(dat.d);
 							} else if (dat.t == "ice1"){
 								rtc_connection.receiveInfo(dat.d);
+							} else if (dat.t == "vid_blob"){
+								if (ms){
+									var d = dat.d.split(",");
+									buff_queue.push(b64toBarray(d[1]));
+									console.log(dat.c);
+									if (sb){
+										console.log("appendBuffer", sourceBuffer);
+										sourceBuffer.appendBuffer(buff_queue.shift());
+										sb = false;
+									} else {
+										console.log("buff_queue");
+									}
+								} else {
+									ms = new MediaSource();
+									ms.addEventListener('error', function (e, a, s){
+										console.log(e, a, s);
+									});
+									console.log("make MediaSource", ms);
+
+									video.src = window.URL.createObjectURL(ms);
+									ms.addEventListener('sourceopen', function(e) {
+										console.log("make MediaSource buffer");
+										if (!sourceBuffer){
+											sourceBuffer = ms.addSourceBuffer(mime);
+											sourceBuffer.addEventListener('error', function (e, a, s){
+												console.log(e, a, s);
+											});
+											sourceBuffer.addEventListener('updateend', function(e) {
+												console.log("make sourceBuffer updateend", buff_queue.length, this);
+												if ( buff_queue.length ) {
+													sourceBuffer.appendBuffer(buff_queue.shift());
+												} else {
+													sb = true;
+												}
+											}, false);
+											sb = true;
+										}
+									}, false);
+								}
 							}
 						}
 					}
