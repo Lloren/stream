@@ -32,12 +32,28 @@ window.iceServers = {
 	}]
 };
 
+var video_you;
 var video;
 var p;
+var p_you;
 var ice_sent = false;
 
 /* offerer */
 function offererPeer(stream){
+	video_you = document.createElement('video');
+	video_you.src = URL.createObjectURL(stream);
+	document.body.appendChild(video_you);
+	video_you.muted = "muted";
+	video_you.width = 200;
+	p_you = video_you.play();
+	console.log(p_you);
+	if (p_you !== undefined){
+		p_you.then(function(){
+			console.log("playing");
+		}).catch(function (e){
+			console.log(e);
+		});
+	}
 	// stream is only attached by offerer
 	rtc_connection.addStream(stream);
 	
