@@ -11,6 +11,12 @@ window.URL = window.URL || window.webkitURL;
 window.iceServers = {
 	iceServers: [{
 		url: 'stun:23.21.150.121'
+	},{
+		url: 'stun:stun1.l.google.com:19302'
+	},{
+		url: 'stun:stun.services.mozilla.com'
+	},{
+		url: 'stun:stunserver.org'
 	}]
 };
 
